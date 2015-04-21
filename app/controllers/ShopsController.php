@@ -65,36 +65,30 @@ class ShopsController extends \Phalcon\Mvc\Controller {
     
     public function deleteAction() {
         
-            $shop = Shop::findFirst();
-            $shop->id = 1;
-            $shop->clientid = "x5";
-            $shop->name = "test shpo";
-            $shop->adress = array(
-                'street' => 'test street',
-                'city' => 'test city',
-                'region' => 'test region'
-            );
-            $shop->osaDB = array(
-                'ip' => 'test osa ip',
-                'dbName' => 'test osa dbName',
-                'login' => 'test osa login',
-                'password' => 'test osa password'
-            );
-            $shop->posdataDB = array(
-                'dbType' => 'Orcale',
-                'dbName' => 'test posdata dbName',
-                'login' => 'test posdata login',
-                'password' => 'test posdata password'
-            );
-            $shop->isActive = true;
-
-            if ($shop->save() == false) {
-                echo 'Failed to insert into the database' . "\n";
-                foreach($shop->getMessages as $message) {
-                    echo $message . "\n";
+            $request = $this->request;
+            if ($request->isDelete() == true) {
+                
+                $inputData = $this->request->getRawBody();
+                parse_str($inputData, $data);
+                
+                if (isset($data['shop_id'])) {
+                    $shop_id = (int) $data['shop_id'];
+                } 
+                
+                if (!$shop_id) {
+                    echo 'Shop id required!' . "\n";
+                } else {
+                    $shop = Shop::findFirst(array('shop_id' => $shop_id));
+                    if ($shop->delete() == false) {
+                        echo "Sorry, we can't delete the shop right now: \n";
+                        foreach ($shop->getMessages() as $message) {
+                            echo $message, "\n";
+                        }
+                    } else {
+                        echo "Shop {$shop_id} was deleted successfully!";
+                    }
                 }
-            } else {
-                echo 'Shop inserted!';
+                
             }
             
     }
