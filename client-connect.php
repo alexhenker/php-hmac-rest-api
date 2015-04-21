@@ -92,13 +92,14 @@ $updateDataRaw = array(
 
 
 ///////////////////////
-///// UPDATE (PUT) ///
-
-$data = http_build_query($insertDataRaw, '', '&');
+///// DELETE (DELETE) ///
+$deleteDataRaw = array('shop_id' => 2332);
+$data = http_build_query($deleteDataRaw, '', '&');
 $message = buildMessage($time, $id, $data);
 $hash = hash_hmac('sha256', $message, $privateKey);
 $headers = ['API_ID: ' . $id, 'API_TIME: ' . $time, 'API_HASH: ' . $hash];
 $ch = curl_init();
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
 curl_setopt($ch, CURLOPT_URL, 'http://rest:8000/shop');
 curl_setopt($ch, CURLOPT_POST, TRUE);

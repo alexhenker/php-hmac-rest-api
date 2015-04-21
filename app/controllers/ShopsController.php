@@ -65,9 +65,7 @@ class ShopsController extends \Phalcon\Mvc\Controller {
     
     public function deleteAction() {
         
-            $shop = Shop::findOne();
-            
-            die();
+            $shop = Shop::findFirst();
             $shop->id = 1;
             $shop->clientid = "x5";
             $shop->name = "test shpo";

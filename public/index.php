@@ -46,10 +46,21 @@ try {
 	$privateKey = $app->config->privateKey;
         
 	$requestMethod = $_SERVER['REQUEST_METHOD'];
-	$data = ${"_" . $requestMethod};
         
-        if ($requestMethod == 'GET') {
-           unset($data['_url']); // clean for hashes comparison
+        switch ($_SERVER['REQUEST_METHOD']) {
+            
+            case 'GET':
+                $data = $_GET;
+                unset($data['_url']); // clean for hashes comparison
+                break;
+            
+            case 'POST':
+                $data = $_POST;
+                break;
+
+            default: // PUT AND DELETE
+                $data = file_get_contents('php://input');
+                break;
         }
         
 	$message = new \Micro\Messages\Auth($clientId, $time, $hash, $data);

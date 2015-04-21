@@ -20,11 +20,16 @@ $routes[] = [
 	'handler' => ['Controllers\ShopsController', 'postAction']
 ];
 
-
 $routes[] = [
 	'method' => 'post', 
 	'route' => '/shop', 
 	'handler' => ['Controllers\ShopsController', 'postAction']
+];
+
+$routes[] = [
+	'method' => 'delete', 
+	'route' => '/shop', 
+	'handler' => ['Controllers\ShopsController', 'deleteAction']
 ];
 
 //$routes[] = [
