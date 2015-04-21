@@ -5,13 +5,12 @@
  */
 
 $settings = array(
-	'database' => array(
-		'adapter' => 'Mysql',	/* Possible Values: Mysql, Postgres, Sqlite */
-		'host' => 'localhost',
-		'username' => 'root',
-		'password' => '12345',
-		'name' => 'api',
-		'port' => 3306
+    
+        'privateKey' => '482fe5ad77014f9506651028801ab376f141916bd26b2b3f0271b5ec2155b989',
+    
+	'mongoDB' => array(
+		'creds' => '',
+		'dbName' => 'osa_main'
 	),
 );
 

@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 /**
  * @author Jete O'Keeffe
@@ -15,28 +15,22 @@ $routes[] = [
  */
 
 $routes[] = [
-	'method' => 'post', 
-	'route' => '/ping', 
-	'handler' => ['Controllers\ExampleController', 'pingAction']
-];
-
-$routes[] = [
 	'method' => 'get', 
 	'route' => '/ping', 
-	'handler' => ['Controllers\ExampleController', 'pingAction']
+	'handler' => ['Controllers\ShopsController', 'postAction']
 ];
 
 
 $routes[] = [
 	'method' => 'post', 
-	'route' => '/test/{id}', 
-	'handler' => ['Controllers\ExampleController', 'testAction']
+	'route' => '/shop', 
+	'handler' => ['Controllers\ShopsController', 'postAction']
 ];
 
-$routes[] = [
-	'method' => 'post', 
-	'route' => '/skip/{name}', 
-	'handler' => ['Controllers\ExampleController', 'skipAction']
-];
+//$routes[] = [
+//	'method' => 'post', 
+//	'route' => '/skip/{name}', 
+//	'handler' => ['Controllers\ExampleController', 'skipAction']
+//];
 
 return $routes;

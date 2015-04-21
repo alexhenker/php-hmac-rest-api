@@ -33,30 +33,18 @@ class Micro extends \Phalcon\Mvc\Micro implements IRun {
 		}
 
 		$di = new \Phalcon\DI\FactoryDefault();
+                
 		$di->set('config', new \Phalcon\Config(require $file));
 
-		$di->set('db', function() use ($di) {
-			$type = strtolower($di->get('config')->database->adapter);
-			$creds = array(
-				'host' => $di->get('config')->database->host,
-				'username' => $di->get('config')->database->username,
-				'password' => $di->get('config')->database->password,
-				'dbname' => $di->get('config')->database->name
-			);
-
-			if ($type == 'mysql') {
-				$connection =  new \Phalcon\Db\Adapter\Pdo\Mysql($creds);
-			} else if ($type == 'postgres') {
-				$connection =  new \Phalcon\Db\Adapter\Pdo\Postgesql($creds);
-			} else if ($type == 'sqlite') {
-				$connection =  new \Phalcon\Db\Adapter\Pdo\Sqlite($creds);
-			} else {
-				throw new Exception('Bad Database Adapter');
-			}
-
-			return $connection;
-		});
-
+                $di->set('mongo', function() {
+                    $mongo = new \MongoClient($this->di->get('config')->mongoDB->creds);
+                    return $mongo->selectDb($this->di->get('config')->mongoDB->dbName);
+                }, true);
+                
+                $di->set('collectionManager', function(){
+                    return new \Phalcon\Mvc\Collection\Manager();
+                }, true);
+                
 		$this->setDI($di);
 	}
 
@@ -95,31 +83,40 @@ class Micro extends \Phalcon\Mvc\Micro implements IRun {
 		if (!empty($routes)) {
 			foreach($routes as $obj) {
 
-                            switch($obj['method']) {
-                                    case 'get':
-                                            $this->get($obj['route'], $obj['handler']);
-                                            break;
-                                    case 'post':
-                                            $this->post($obj['route'], $obj['handler']);
-                                            break;
-                                    case 'delete':
-                                            $this->delete($obj['route'], $obj['handler']);
-                                            break;
-                                    case 'put':
-                                            $this->put($obj['route'], $obj['handler']);
-                                            break;
-                                    case 'head':
-                                            $this->head($obj['route'], $obj['handler']);
-                                            break;
-                                    case 'options':
-                                            $this->options($obj['route'], $obj['handler']);
-                                            break;
-                                    case 'patch':
-                                            $this->patch($obj['route'], $obj['handler']);
-                                            break;
-                                    default:
-                                            break;
+                            $controllerName = class_exists($obj['handler'][0]) ? $obj['handler'][0] : false;
+                            if (!$controllerName) {
+                                throw new \Exception("Wrong controller name in routes ({$obj['handler'][0]})");
                             }
+                            
+                            $controller = new $controllerName;
+                            $controllerAction = $obj['handler'][1];
+
+                            switch($obj['method']) {
+                                case 'get':
+                                        $this->get($obj['route'], array($controller, $controllerAction));
+                                        break;
+                                case 'post':
+                                        $this->post($obj['route'], array($controller, $controllerAction));
+                                        break;
+                                case 'delete':
+                                        $this->delete($obj['route'], array($controller, $controllerAction));
+                                        break;
+                                case 'put':
+                                        $this->put($obj['route'], array($controller, $controllerAction));
+                                        break;
+                                case 'head':
+                                        $this->head($obj['route'], array($controller, $controllerAction));
+                                        break;
+                                case 'options':
+                                        $this->options($obj['route'], array($controller, $controllerAction));
+                                        break;
+                                case 'patch':
+                                        $this->patch($obj['route'], array($controller, $controllerAction));
+                                        break;
+                                default:
+                                        break;
+                            }
+                            
 			}
 		}
 	}
