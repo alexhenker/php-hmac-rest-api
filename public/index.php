@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Driver for PHP HMAC Restful API using PhalconPHP's Micro framework
  * 
@@ -45,8 +44,13 @@ try {
 	$hash = $app->request->getHeader('API_HASH');
 
 	$privateKey = Api::findFirst($clientId)->private_key;
-	
-	$data = ${"_" . $_SERVER['REQUEST_METHOD']};
+	$requestMethod = $_SERVER['REQUEST_METHOD'];
+	$data = ${"_" . $requestMethod};
+        
+        if ($requestMethod == 'GET') {
+           unset($data['_url']); // clean for hashes comparison
+        }
+        
 	$message = new \Micro\Messages\Auth($clientId, $time, $hash, $data);
 
 	// Setup HMAC Authentication callback to validate user before routing message

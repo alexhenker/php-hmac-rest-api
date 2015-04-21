@@ -13,7 +13,7 @@ $route = '/ping';
 if (isset($argv[1])) {
 	$host = 'http://' . $argv[1] . $route;
 } else {
-	$host = "http://api.example.com" . $route;
+	$host = "http://rest" . $route;
 }
 
 $privateKey = '593fe6ed77014f9507761028801aa376f141916bd26b1b3f0271b5ec3135b989';
@@ -21,7 +21,7 @@ $privateKey = '593fe6ed77014f9507761028801aa376f141916bd26b1b3f0271b5ec3135b989'
 $time = time();
 $id = 1;
 
-$data = ['name' => 'bob'];
+$data = '';
 $message = buildMessage($time, $id, $data);
 
 $hash = hash_hmac('sha256', $message, $privateKey);
@@ -31,10 +31,10 @@ $headers = ['API_ID: ' . $id, 'API_TIME: ' . $time, 'API_HASH: ' . $hash];
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
-curl_setopt($ch, CURLOPT_URL, $host);
-curl_setopt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_URL, 'http://rest:8000/ping');
+//curl_setopt($ch, CURLOPT_POST, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, TRUE);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+//curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLINFO_HEADER_OUT, TRUE);
@@ -56,8 +56,12 @@ if ($result === FALSE) {
 curl_close($ch);
 
 
-function buildMessage($time, $id, array $data) {
-	return $time . $id . implode($data);
+function buildMessage($time, $data) {
+    
+//    var_dump(http_build_query($data));
+//        die();
+	return $time . $id . $data;
+//	return $time . $id . implode($data);
 }
 
 ?>

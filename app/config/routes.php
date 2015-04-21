@@ -20,6 +20,12 @@ $routes[] = [
 	'handler' => ['Controllers\ExampleController', 'pingAction']
 ];
 
+$routes[] = [
+	'method' => 'get', 
+	'route' => '/ping', 
+	'handler' => ['Controllers\ExampleController', 'pingAction']
+];
+
 
 $routes[] = [
 	'method' => 'post', 
@@ -30,8 +36,7 @@ $routes[] = [
 $routes[] = [
 	'method' => 'post', 
 	'route' => '/skip/{name}', 
-	'handler' => ['Controllers\ExampleController', 'skipAction'],
-    'authentication' => FALSE
+	'handler' => ['Controllers\ExampleController', 'skipAction']
 ];
 
 return $routes;

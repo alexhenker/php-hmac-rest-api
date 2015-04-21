@@ -77,18 +77,6 @@ class HmacAuthenticate extends \Phalcon\Events\Manager implements IEvent {
                                 
                                 if (!$allowed) { // already authorized skip this part
                                     
-                                    // last try - login without auth for open calls
-                                    $method = strtolower($app->router->getMatchedRoute()->getHttpMethods());
-                                    $unAuthenticated = $app->getUnauthenticated();
-
-                                    if (isset($unAuthenticated[$method])) {
-                                            $unAuthenticated = array_flip($unAuthenticated[$method]);
-
-                                            if (isset($unAuthenticated[$app->router->getMatchedRoute()->getPattern()])) {
-                                                    return true; // gain access to open call
-                                            } 
-                                    }
-                                    
                                     // still not authorized, get out of here
                                     $app->response->setStatusCode(401, "Unauthorized");
                                     $app->response->setContent("Access denied");

@@ -8,8 +8,8 @@ $settings = array(
 	'database' => array(
 		'adapter' => 'Mysql',	/* Possible Values: Mysql, Postgres, Sqlite */
 		'host' => 'localhost',
-		'username' => 'test',
-		'password' => 'test',
+		'username' => 'root',
+		'password' => '12345',
 		'name' => 'api',
 		'port' => 3306
 	),

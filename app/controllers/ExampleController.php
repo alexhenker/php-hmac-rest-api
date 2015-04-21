@@ -5,10 +5,10 @@ namespace Controllers;
 class ExampleController extends \Phalcon\Mvc\Controller {
 
 
-	public function pingAction() {
+    public function pingAction() {
 
-		echo "pong";
-	}
+            echo "pong";
+    }
 
 
     public function testAction($id) {

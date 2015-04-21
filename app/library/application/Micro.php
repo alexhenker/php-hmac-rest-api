@@ -17,23 +17,9 @@
  */
 
 namespace Application;
-
 use Interfaces\IRun as IRun;
 
 class Micro extends \Phalcon\Mvc\Micro implements IRun {
-
-    /**
-     * Pages that doesn't require authentication
-     * @var array
-     */
-    protected $_noAuthPages;
-
-	/**
-	 * Constructor of the App
-	 */
-	public function __construct() {
-        $this->_noAuthPages = array();
-	}
 
 	/**
 	 * Set Dependency Injector with configuration variables
@@ -109,43 +95,31 @@ class Micro extends \Phalcon\Mvc\Micro implements IRun {
 		if (!empty($routes)) {
 			foreach($routes as $obj) {
 
-                // Which pages are allowed to skip authentication
-                if (isset($obj['authentication']) && $obj['authentication'] === false) {
-
-                    $method = strtolower($obj['method']);
-
-                    if (! isset($this->_noAuthPages[$method])) {
-                        $this->_noAuthPages[$method] = array();
-                    }
-
-                    $this->_noAuthPages[$method][] = $obj['route'];
-                }
-
-				switch($obj['method']) {
-					case 'get':
-						$this->get($obj['route'], $obj['handler']);
-						break;
-					case 'post':
-						$this->post($obj['route'], $obj['handler']);
-						break;
-					case 'delete':
-						$this->delete($obj['route'], $obj['handler']);
-						break;
-					case 'put':
-						$this->put($obj['route'], $obj['handler']);
-						break;
-					case 'head':
-						$this->head($obj['route'], $obj['handler']);
-						break;
-					case 'options':
-						$this->options($obj['route'], $obj['handler']);
-						break;
-					case 'patch':
-						$this->patch($obj['route'], $obj['handler']);
-						break;
-					default:
-						break;
-				}
+                            switch($obj['method']) {
+                                    case 'get':
+                                            $this->get($obj['route'], $obj['handler']);
+                                            break;
+                                    case 'post':
+                                            $this->post($obj['route'], $obj['handler']);
+                                            break;
+                                    case 'delete':
+                                            $this->delete($obj['route'], $obj['handler']);
+                                            break;
+                                    case 'put':
+                                            $this->put($obj['route'], $obj['handler']);
+                                            break;
+                                    case 'head':
+                                            $this->head($obj['route'], $obj['handler']);
+                                            break;
+                                    case 'options':
+                                            $this->options($obj['route'], $obj['handler']);
+                                            break;
+                                    case 'patch':
+                                            $this->patch($obj['route'], $obj['handler']);
+                                            break;
+                                    default:
+                                            break;
+                            }
 			}
 		}
 	}
@@ -159,12 +133,6 @@ class Micro extends \Phalcon\Mvc\Micro implements IRun {
 		$this->setEventsManager($events);
 	}
 
-    /**
-     *
-     */
-    public function getUnauthenticated() {
-        return $this->_noAuthPages;
-    }
 	/**
 	 * Main run block that executes the micro application
 	 *
