@@ -16,8 +16,8 @@ $routes[] = [
 
 $routes[] = [
 	'method' => 'get', 
-	'route' => '/ping', 
-	'handler' => ['Controllers\ShopsController', 'postAction']
+	'route' => '/shop/{shop_id}', 
+	'handler' => ['Controllers\ShopsController', 'getAction']
 ];
 
 $routes[] = [

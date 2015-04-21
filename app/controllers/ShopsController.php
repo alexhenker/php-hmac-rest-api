@@ -7,6 +7,31 @@ use \Models\Shop as Shop;
 class ShopsController extends \Phalcon\Mvc\Controller {
 
 
+    public function getAction($shop_id) {
+        
+            $request = $this->request;
+            if ($request->isGet() == true) {
+                
+                $shop_id = (int) $shop_id;
+                
+                if (!$shop_id) {
+                    echo 'Shop id required!' . "\n";
+                } else {
+                    
+                    $shop = Shop::findFirst(array('shop_id' => $shop_id));
+                    
+                    if (!$shop) {
+                        echo "No shop with id $shop_id in db \n";
+                    } else {
+                        echo json_encode($shop);
+                    }
+                    
+                }
+                
+            }
+            
+    }
+    
     public function postAction() {
         
             $request = $this->request;
