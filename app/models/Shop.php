@@ -4,8 +4,9 @@ namespace Models;
 
 class Shop extends \Phalcon\Mvc\Collection {
 
-    public function initialize() {
-            $this->setSource("shops");
+    public function getSource()
+    {
+        return "shops";
     }
     
     public function beforeCreate()

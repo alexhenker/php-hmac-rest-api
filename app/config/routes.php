@@ -16,26 +16,27 @@ $routes[] = [
 
 $routes[] = [
 	'method' => 'get', 
-	'route' => '/shop/{shop_id}', 
+	'route' => '/api/v1/shop/{shop_id}', 
 	'handler' => ['Controllers\ShopsController', 'getAction']
 ];
 
 $routes[] = [
 	'method' => 'post', 
-	'route' => '/shop', 
+	'route' => '/api/v1/shop', 
 	'handler' => ['Controllers\ShopsController', 'postAction']
 ];
 
 $routes[] = [
+	'method' => 'put', 
+	'route' => '/api/v1/shop', 
+	'handler' => ['Controllers\ShopsController', 'putAction']
+];
+
+$routes[] = [
 	'method' => 'delete', 
-	'route' => '/shop', 
+	'route' => '/api/v1/shop', 
 	'handler' => ['Controllers\ShopsController', 'deleteAction']
 ];
 
-//$routes[] = [
-//	'method' => 'post', 
-//	'route' => '/skip/{name}', 
-//	'handler' => ['Controllers\ExampleController', 'skipAction']
-//];
 
 return $routes;
