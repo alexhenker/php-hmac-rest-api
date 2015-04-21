@@ -38,8 +38,16 @@ class ShopsController extends \Phalcon\Mvc\Controller {
             
             if ($request->isPost() == true) {
                 
+                $shop_id = (int) $request->getPost('shop_id', 'int');
+                
+                // check if already in db
+                if (Shop::findFirst(array('shop_id' => $shop_id))) {
+                    echo "Shop with id $shop_id already in db \n";
+                    return false;
+                } 
+                
                 $shop = new Shop();
-                $shop->shop_id = (int) $request->getPost('shop_id', 'int');
+                $shop->shop_id = $shop_id;
                 $shop->clientId = $request->getPost('clientId', 'string');
                 $shop->name = $request->getPost('name', 'string');
                 
@@ -82,6 +90,75 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                     }
                 } else {
                     echo "Shop {$shop->shop_id} inserted!";
+                }
+                
+            }
+            
+    }
+    
+    public function putAction() {
+        
+            $request = $this->request;
+            
+            if ($request->isPut() == true) {
+                
+                $inputData = $this->request->getRawBody();
+                parse_str($inputData, $data);
+                
+                $shop_id = (int) $data['shop_id'];
+                
+                // check if already in db
+                $shop = Shop::findFirst(array('shop_id' => $shop_id));
+                if (!$shop) {
+                    echo "Shop with id $shop_id wasn't found in db \n";
+                    return false;
+                } 
+                
+                $filter = new \Phalcon\Filter();
+                
+                $shop->shop_id = $shop_id;
+                $shop->clientId = $filter->sanitize($data['clientId'], 'string');
+                $shop->name = $filter->sanitize($data['name'], 'string');
+                
+                $adress = $data['adress'];
+                if ($adress) {
+                    $shop->adress = array(
+                        'street' => isset($adress['street']) ? $adress['street'] : '',
+                        'city' => isset($adress['city']) ? $adress['city'] : '',
+                        'region' => isset($adress['region']) ? $adress['region'] : ''
+                    );
+                }
+                
+                $osaDB = $data['osaDB'];
+                if ($osaDB) {
+                    $shop->osaDB = array(
+                        'ip' => isset($osaDB['ip']) ? $osaDB['ip'] : '',
+                        'dbName' => isset($osaDB['dbName']) ? $osaDB['dbName'] : '',
+                        'login' => isset($osaDB['login']) ? $osaDB['login'] : '',
+                        'password' => isset($osaDB['password']) ? $osaDB['password'] : '',
+                    );
+                }
+                
+                $posdataDB = $data['posdataDB'];
+                if ($posdataDB) {
+                    $shop->posdataDB = array(
+                        'dbType' => isset($posdataDB['dbType']) ? $posdataDB['dbType'] : '',
+                        'dbName' => isset($posdataDB['dbName']) ? $posdataDB['dbName'] : '',
+                        'login' => isset($posdataDB['login']) ? $posdataDB['login'] : '',
+                        'password' => isset($posdataDB['password']) ? $posdataDB['password'] : '',
+                    );
+                }
+                
+                $shop->isActive = (bool) $data['isActive'];
+                
+                
+                if ($shop->save() == false) {
+                    echo "Failed to update shop $shop_id" . "\n";
+                    foreach($shop->getMessages() as $message) {
+                        echo $message . "\n";
+                    }
+                } else {
+                    echo "Shop {$shop_id} updated!";
                 }
                 
             }
