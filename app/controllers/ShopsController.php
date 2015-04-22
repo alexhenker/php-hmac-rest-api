@@ -9,28 +9,28 @@ class ShopsController extends \Phalcon\Mvc\Controller {
 
     public function getAction($shop_id) {
         
-            $request = $this->request;
-            if ($request->isGet() == true) {
+        if ($this->request->isGet() == true) {
+
+            $shop_id = (int) $shop_id;
+
+            if (!$shop_id) { 
+                echo 'Correct shop id required!' . "\n";
+                return false;
+            }
                 
-                $shop_id = (int) $shop_id;
-                
-                if (!$shop_id) {
-                    echo 'Correct shop id required!' . "\n";
-                } else {
-                    
-                    $shop = Shop::findFirst(array('conditions' => array('shop_id' => $shop_id)));
-                    
-                    if (!$shop) {
-                        echo "No shop with id $shop_id in db \n";
-                    } else {
-                        echo json_encode($shop);
-                    }
-                    
-                }
-                
+            $shop = Shop::findFirst(array('conditions' => array('shop_id' => $shop_id)));
+
+            if (!$shop) {
+                echo "No shop with id $shop_id in db \n";
+                return false;
             }
             
+            echo json_encode($shop);
+
+        }
+            
     }
+    
     
     public function postAction() {
         
@@ -41,7 +41,7 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                 $shop_id = (int) $request->getPost('shop_id', 'int');
                 
                 // check if already in db
-                if (Shop::findFirst(array('shop_id' => $shop_id))) {
+                if (Shop::findFirst(array('conditions' => array('shop_id' => $shop_id)))) {
                     echo "Shop with id $shop_id already in db \n";
                     return false;
                 } 
@@ -88,19 +88,19 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                     foreach($shop->getMessages() as $message) {
                         echo $message . "\n";
                     }
-                } else {
-                    echo "Shop {$shop->shop_id} inserted!";
-                }
+                    return false;
+                } 
+                
+                echo "Shop {$shop->shop_id} inserted!";
                 
             }
             
     }
     
+    
     public function putAction() {
         
-            $request = $this->request;
-            
-            if ($request->isPut() == true) {
+            if ($this->request->isPut() == true) {
                 
                 $inputData = $this->request->getRawBody();
                 parse_str($inputData, $data);
@@ -108,7 +108,7 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                 $shop_id = (int) $data['shop_id'];
                 
                 // check if already in db
-                $shop = Shop::findFirst(array('shop_id' => $shop_id));
+                $shop = Shop::findFirst(array('conditions' => array('shop_id' => $shop_id)));
                 if (!$shop) {
                     echo "Shop with id $shop_id wasn't found in db \n";
                     return false;
@@ -151,24 +151,24 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                 
                 $shop->isActive = (bool) $data['isActive'];
                 
-                
                 if ($shop->save() == false) {
                     echo "Failed to update shop $shop_id" . "\n";
                     foreach($shop->getMessages() as $message) {
                         echo $message . "\n";
                     }
-                } else {
-                    echo "Shop {$shop_id} updated!";
+                    return false;
                 }
+                
+                echo "Shop {$shop_id} updated!";
                 
             }
             
     }
     
+    
     public function deleteAction() {
         
-            $request = $this->request;
-            if ($request->isDelete() == true) {
+            if ($this->request->isDelete() == true) {
                 
                 $inputData = $this->request->getRawBody();
                 parse_str($inputData, $data);
@@ -179,21 +179,23 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                 
                 if (!$shop_id) {
                     echo 'Shop id required!' . "\n";
-                } else {
-                    $shop = Shop::findFirst(array('shop_id' => $shop_id));
-                    if (!$shop) {
-                        echo "There is no shop {$shop_id} in db";
-                        return false;
-                    }
-                    if ($shop->delete() == false) {
-                        echo "Sorry, we can't delete the shop right now: \n";
-                        foreach ($shop->getMessages() as $message) {
-                            echo $message, "\n";
-                        }
-                    } else {
-                        echo "Shop {$shop_id} was deleted successfully!";
-                    }
+                    return false;
+                } 
+                
+                $shop = Shop::findFirst(array('conditions' => array('shop_id' => $shop_id)));
+                if (!$shop) {
+                    echo "There is no shop {$shop_id} in db";
+                    return false;
                 }
+                
+                if ($shop->delete() == false) {
+                    echo "Sorry, we can't delete the shop right now \n";
+                    foreach ($shop->getMessages() as $message) {
+                        echo $message, "\n";
+                    }
+                } 
+                
+                echo "Shop {$shop_id} was deleted successfully!";
                 
             }
             

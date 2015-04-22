@@ -53,7 +53,7 @@ $updateDataRaw = array(
 
 $rest->post('/api/v1/shop', $insertDataRaw);
 $rest->get('/api/v1/shop', 2332);
-$rest->put('/api/v1/shop', $updateDataRaw);
-$rest->get('/api/v1/shop', 2332);
-$rest->delete('/api/v1/shop', array('shop_id' => 2332));
-$rest->get('/api/v1/shop', 2332);
+//$rest->put('/api/v1/shop', $updateDataRaw);
+//$rest->get('/api/v1/shop', 2332);
+//$rest->delete('/api/v1/shop', array('shop_id' => 2332));
+//$rest->get('/api/v1/shop', 2332);
