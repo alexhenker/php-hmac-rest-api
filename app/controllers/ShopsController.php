@@ -15,10 +15,10 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                 $shop_id = (int) $shop_id;
                 
                 if (!$shop_id) {
-                    echo 'Shop id required!' . "\n";
+                    echo 'Correct shop id required!' . "\n";
                 } else {
                     
-                    $shop = Shop::findFirst(array('shop_id' => $shop_id));
+                    $shop = Shop::findFirst(array('conditions' => array('shop_id' => $shop_id)));
                     
                     if (!$shop) {
                         echo "No shop with id $shop_id in db \n";
@@ -181,6 +181,10 @@ class ShopsController extends \Phalcon\Mvc\Controller {
                     echo 'Shop id required!' . "\n";
                 } else {
                     $shop = Shop::findFirst(array('shop_id' => $shop_id));
+                    if (!$shop) {
+                        echo "There is no shop {$shop_id} in db";
+                        return false;
+                    }
                     if ($shop->delete() == false) {
                         echo "Sorry, we can't delete the shop right now: \n";
                         foreach ($shop->getMessages() as $message) {

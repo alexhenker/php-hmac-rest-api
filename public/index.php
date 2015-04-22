@@ -45,8 +45,6 @@ try {
 
 	$privateKey = $app->config->privateKey;
         
-	$requestMethod = $_SERVER['REQUEST_METHOD'];
-        
         switch ($_SERVER['REQUEST_METHOD']) {
             
             case 'GET':
